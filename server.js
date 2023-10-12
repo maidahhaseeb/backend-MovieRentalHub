@@ -212,9 +212,25 @@ app.get('/api/customers/details/:customer_id', async (req, res) => {
 
     if (results.length === 0) {
       res.status(404).json({ error: 'Customer not found' });
-    } else {
-      res.json(results[0]);
+    // } else {
+    //   res.json(results[0]);
     }
+
+    // Fetch the movies rented by the customer
+    const moviesQuery = `
+      SELECT film.title, film.description, rental.rental_date, rental.return_date
+      FROM rental
+      JOIN inventory ON rental.inventory_id = inventory.inventory_id
+      JOIN film ON inventory.film_id = film.film_id
+      WHERE rental.customer_id = ?
+    `;
+    const [moviesResults] = await db.query(moviesQuery, customer_id);
+
+    // Respond with both customer details and the list of movies
+    res.json({
+      customerDetails: results[0],
+      rentedMovies: moviesResults
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal Server Error' });
