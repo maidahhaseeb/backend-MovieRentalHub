@@ -166,9 +166,9 @@ app.get('/api/customers/search', async(req, res) => {
 // Endpoint to add a new customer
 app.post('/api/customers', async (req, res) => {
   try {
-    const { customer_id, store_id, first_name, last_name, email } = req.body;
-    const query = 'INSERT INTO customer (customer_id, store_id, first_name, last_name, email) VALUES (?, ?, ?, ?, ?)';
-    await db.query(query, [customer_id, store_id, first_name, last_name, email]);
+    const { customer_id, store_id, first_name, last_name, email, address_id, active, create_date, last_update } = req.body;
+    const query = 'INSERT INTO customer (customer_id, store_id, first_name, last_name, email, address_id, active, create_date, last_update ) VALUES (?, ?, ?, ?, ?,?,?,?,?)';
+    await db.query(query, [customer_id, store_id, first_name, last_name, email, address_id, active, create_date, last_update ]);
     res.json({ message: 'Customer added successfully' });
   } catch (err) {
     console.error(err);
@@ -179,10 +179,10 @@ app.post('/api/customers', async (req, res) => {
 // Endpoint to edit customer details
 app.put('/api/customers/:customer_id', async (req, res) => {
   try {
-    const { customer_id, store_id, first_name, last_name, email } = req.body;
+    const { customer_id, store_id, first_name, last_name, email, address_id, active, create_date, last_update } = req.body;
     const { customer_id: customerId } = req.params;
-    const query = 'UPDATE customer SET store_id = ? first_name = ?, last_name = ?, email = ? WHERE customer_id = ?';
-    await db.query(query, [store_id, first_name, last_name, email, customerId]);
+    const query = 'UPDATE customer SET store_id = ?, first_name = ?, last_name = ?, email = ?, address_id = ?, active = ?, create_date = ?, last_update = ? WHERE customer_id = ?';
+    await db.query(query, [store_id, first_name, last_name, email, address_id, active, create_date, last_update, customerId]);
     res.json({ message: 'Customer updated successfully' });
   } catch (err) {
     console.error(err);
